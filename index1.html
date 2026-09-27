@@ -1,0 +1,598 @@
+%%html
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Cyber Defence GRC Tool</title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background: #f4f6f8;
+            color: #1f2937;
+        }
+
+        header {
+            background: #172554;
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        nav {
+            background: #1e3a8a;
+            padding: 15px;
+            text-align: center;
+        }
+
+        nav button {
+            background: white;
+            color: #1e3a8a;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        nav button:hover {
+            background: #dbeafe;
+        }
+
+        main {
+            padding: 30px;
+        }
+
+        .cards {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            width: 200px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px #bbb;
+        }
+
+        .card p {
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        .danger {
+            border-left: 5px solid #dc2626;
+        }
+
+        .form-box {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 500px;
+            box-shadow: 0 2px 8px #bbb;
+        }
+
+        input {
+            display: block;
+            margin: 10px 0 15px;
+            padding: 10px;
+            width: 90%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        .action-button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        table {
+            margin-top: 20px;
+            width: 100%;
+            background: white;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #172554;
+            color: white;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .low {
+            color: green;
+            font-weight: bold;
+        }
+
+        .medium {
+            color: orange;
+            font-weight: bold;
+        }
+
+        .high {
+            color: red;
+            font-weight: bold;
+        }
+
+        .critical {
+            color: darkred;
+            font-weight: bold;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <h1>Cyber Defence GRC Tool</h1>
+
+    <p>
+        Governance, Risk and Compliance Dashboard
+    </p>
+
+</header>
+
+
+<nav>
+
+    <button onclick="showPage('dashboard')">
+        Dashboard
+    </button>
+
+    <button onclick="showPage('assets')">
+        Assets
+    </button>
+
+    <button onclick="showPage('risks')">
+        Risks
+    </button>
+
+</nav>
+
+
+<main>
+
+
+<!-- DASHBOARD -->
+
+<section id="dashboard">
+
+    <h2>Dashboard</h2>
+
+    <div class="cards">
+
+        <div class="card">
+
+            <h3>Total Assets</h3>
+
+            <p id="assetCount">0</p>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>Total Risks</h3>
+
+            <p id="riskCount">0</p>
+
+        </div>
+
+
+        <div class="card danger">
+
+            <h3>High/Critical Risks</h3>
+
+            <p id="highRiskCount">0</p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ASSETS -->
+
+<section id="assets" class="hidden">
+
+    <h2>Asset Management</h2>
+
+    <div class="form-box">
+
+        <label>Asset Name</label>
+
+        <input
+            type="text"
+            id="assetName"
+            placeholder="Example: College Server">
+
+
+        <label>Asset Type</label>
+
+        <input
+            type="text"
+            id="assetType"
+            placeholder="Example: Server">
+
+
+        <button
+            class="action-button"
+            onclick="addAsset()">
+
+            Add Asset
+
+        </button>
+
+    </div>
+
+
+    <h3>Asset List</h3>
+
+    <table>
+
+        <thead>
+
+            <tr>
+                <th>Asset</th>
+                <th>Type</th>
+            </tr>
+
+        </thead>
+
+        <tbody id="assetTable"></tbody>
+
+    </table>
+
+</section>
+
+
+<!-- RISKS -->
+
+<section id="risks" class="hidden">
+
+    <h2>Risk Management</h2>
+
+    <div class="form-box">
+
+        <label>Risk Description</label>
+
+        <input
+            type="text"
+            id="riskName"
+            placeholder="Example: Unauthorized Access">
+
+
+        <label>Likelihood (1-5)</label>
+
+        <input
+            type="number"
+            id="likelihood"
+            min="1"
+            max="5">
+
+
+        <label>Impact (1-5)</label>
+
+        <input
+            type="number"
+            id="impact"
+            min="1"
+            max="5">
+
+
+        <button
+            class="action-button"
+            onclick="addRisk()">
+
+            Calculate Risk
+
+        </button>
+
+    </div>
+
+
+    <h3>Risk List</h3>
+
+    <table>
+
+        <thead>
+
+            <tr>
+                <th>Risk</th>
+                <th>Likelihood</th>
+                <th>Impact</th>
+                <th>Score</th>
+                <th>Level</th>
+            </tr>
+
+        </thead>
+
+        <tbody id="riskTable"></tbody>
+
+    </table>
+
+</section>
+
+
+</main>
+
+
+<script>
+
+
+let assets = [];
+
+let risks = [];
+
+
+function showPage(page) {
+
+    document
+        .getElementById("dashboard")
+        .classList.add("hidden");
+
+    document
+        .getElementById("assets")
+        .classList.add("hidden");
+
+    document
+        .getElementById("risks")
+        .classList.add("hidden");
+
+    document
+        .getElementById(page)
+        .classList.remove("hidden");
+
+}
+
+
+function addAsset() {
+
+    let name =
+        document
+        .getElementById("assetName")
+        .value
+        .trim();
+
+    let type =
+        document
+        .getElementById("assetType")
+        .value
+        .trim();
+
+
+    if (name === "" || type === "") {
+
+        alert("Please enter asset name and type.");
+
+        return;
+    }
+
+
+    assets.push({
+        name: name,
+        type: type
+    });
+
+
+    document.getElementById("assetName").value = "";
+
+    document.getElementById("assetType").value = "";
+
+
+    displayAssets();
+
+    updateDashboard();
+
+}
+
+
+function displayAssets() {
+
+    let table =
+        document.getElementById("assetTable");
+
+
+    table.innerHTML = "";
+
+
+    assets.forEach(function(asset) {
+
+        table.innerHTML +=
+            "<tr>" +
+            "<td>" + asset.name + "</td>" +
+            "<td>" + asset.type + "</td>" +
+            "</tr>";
+
+    });
+
+}
+
+
+function addRisk() {
+
+    let name =
+        document
+        .getElementById("riskName")
+        .value
+        .trim();
+
+
+    let likelihood =
+        Number(
+            document
+            .getElementById("likelihood")
+            .value
+        );
+
+
+    let impact =
+        Number(
+            document
+            .getElementById("impact")
+            .value
+        );
+
+
+    if (
+        name === "" ||
+        likelihood < 1 ||
+        likelihood > 5 ||
+        impact < 1 ||
+        impact > 5
+    ) {
+
+        alert(
+            "Likelihood and Impact must be between 1 and 5."
+        );
+
+        return;
+    }
+
+
+    let score = likelihood * impact;
+
+    let level;
+
+
+    if (score >= 17) {
+
+        level = "Critical";
+
+    } else if (score >= 10) {
+
+        level = "High";
+
+    } else if (score >= 5) {
+
+        level = "Medium";
+
+    } else {
+
+        level = "Low";
+
+    }
+
+
+    risks.push({
+
+        name: name,
+        likelihood: likelihood,
+        impact: impact,
+        score: score,
+        level: level
+
+    });
+
+
+    document.getElementById("riskName").value = "";
+
+    document.getElementById("likelihood").value = "";
+
+    document.getElementById("impact").value = "";
+
+
+    displayRisks();
+
+    updateDashboard();
+
+}
+
+
+function displayRisks() {
+
+    let table =
+        document.getElementById("riskTable");
+
+
+    table.innerHTML = "";
+
+
+    risks.forEach(function(risk) {
+
+        table.innerHTML +=
+            "<tr>" +
+            "<td>" + risk.name + "</td>" +
+            "<td>" + risk.likelihood + "</td>" +
+            "<td>" + risk.impact + "</td>" +
+            "<td>" + risk.score + "</td>" +
+            "<td class='" +
+            risk.level.toLowerCase() +
+            "'>" +
+            risk.level +
+            "</td>" +
+            "</tr>";
+
+    });
+
+}
+
+
+function updateDashboard() {
+
+    document.getElementById("assetCount").innerText =
+        assets.length;
+
+
+    document.getElementById("riskCount").innerText =
+        risks.length;
+
+
+    let highRisks =
+        risks.filter(function(risk) {
+
+            return (
+                risk.level === "High" ||
+                risk.level === "Critical"
+            );
+
+        }).length;
+
+
+    document.getElementById("highRiskCount").innerText =
+        highRisks;
+
+}
+
+
+</script>
+
+
+</body>
+
+</html>
